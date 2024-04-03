@@ -1,0 +1,64 @@
+import numpy as np
+
+class Grafo:
+    def __init__(self):
+        self.nos = []
+        self.adjacencias = {}
+
+    def adiciona_no(self, no):
+        str_no = str(no)
+        self.nos.append(str_no)
+        self.adjacencias[str_no] = []
+
+    def adiciona_aresta(self, origem, destino, peso):
+        self.adjacencias[str(origem)].append([str(destino), peso])
+
+    def mostra_nos(self):
+        print(self.nos)
+
+    def retorna_nos(self):
+        return self.nos
+
+    def mostra_adjacencias(self):
+        print(self.adjacencias)
+
+    def retorna_adjacencias(self):
+        return self.adjacencias
+
+    def alg_dijkstra(self, origem):
+      origem = str(origem)
+
+      # inicialize as distancias
+      distancias = {}
+
+      # distancia para outros nós = inf
+      for adjacencia in self.adjacencias:
+        distancias[adjacencia[0]] = np.inf
+
+      # distancia para o nó inicial = 0
+      distancias[origem] = 0
+
+      # conjunto de nós não visitados
+      nos_nao_visitados = self.nos
+
+      # enquanto o conjunto de nós não visitados
+      # não estiver vazio
+      while len(nos_nao_visitados) != 0:
+          # escolhe o nó com a menor distância (chamado nó atual) dos não visitados
+          no_atual = min(nos_nao_visitados, key=lambda no: distancias[no])
+
+          # remove-o do conjunto
+          nos_nao_visitados.remove(no_atual[0])
+
+          # para cada vizinho do nó atual
+          for vizinho, peso in self.adjacencias[no_atual[0]]:
+              # calcula a distância alternativa 
+              # (distância do nó atual mais o peso da aresta entre o nó atual e o vizinho).
+              distancia_alternativa = distancias[no_atual[0]] + peso
+
+              # se a distância alternativa for menor que a distância conhecida para o vizinho
+              if distancia_alternativa <= distancias[vizinho]:
+                # atualize adistância do vizinho
+                distancias[vizinho] = distancia_alternativa
+
+      return distancias
